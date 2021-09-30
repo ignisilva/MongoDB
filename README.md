@@ -10,8 +10,8 @@
   - IP open 관련
     - 운영중엔 백엔드 IP / 회사 IP 정도만 열어주면 됨
   - 연결 방법 설정
-    - [] shell (터미널)
-    - [] application 
+    - [ ] shell (터미널)
+    - [ ] application 
     - [x] Compass (클라이언트 프로그램)
 
 # mongodb 스키마
@@ -76,3 +76,28 @@
 - Event Driven
 
 - Non-Blocking I/O
+
+# Async Await를 활용한 동기, 비동기 전환 기법
+
+- 전부 동기로 작동
+```
+async createPost = () => {
+  await User.findOne({...})   // |findOne|
+  await Blog.insertOne({...}) //          |insertOne|
+  await User.updateOne({...}) //                    |updateOne|
+  await LogApi({...})         //                              |LogApi|
+  return "ok"
+}
+```
+
+- 일기 동기로 작동, 일부 비동기 작동
+```
+async createPost = () => {
+  await User.findOne({...}) // |findOne|
+  await Promise.all([
+    Blog.insertOne({...})   //          |insertOne|
+    User.updateOne({...})   //           |updateOne|
+  ])
+  await LogApi({...})       //                     |LogApi|
+}
+```
